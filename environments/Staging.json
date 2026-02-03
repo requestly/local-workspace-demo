@@ -1,0 +1,11 @@
+{
+  "name": "Staging",
+  "variables": {
+    "apiKey": {
+      "value": "your_key",
+      "type": "string",
+      "id": 0,
+      "isSecret": false
+    }
+  }
+}
