@@ -1,0 +1,45 @@
+{
+  "name": "Add a new organization",
+  "request": {
+    "type": "http",
+    "url": "{{baseUrl}}/organizations",
+    "scripts": {
+      "preRequest": "(function () {\n  function randInt(min, max) {\n    return Math.floor(Math.random() * (max - min + 1)) + min;\n  }\n  function pick(arr) {\n    return arr[randInt(0, arr.length - 1)];\n  }\n\n  const orgPrefixes = [\"Acme\", \"Globex\", \"Innotech\", \"Futurewave\", \"Techsphere\"];\n  const orgSuffixes = [\"Labs\", \"Solutions\", \"Systems\", \"Industries\", \"Enterprises\"];\n\n  const name = `${pick(orgPrefixes)} ${pick(orgSuffixes)}`;\n\n  // Address choices\n  const streets = [\"Baker Street\", \"Elm Street\", \"Park Lane\", \"Maple Avenue\"];\n  const street = pick(streets);\n  const streetNumber = randInt(1, 300);\n  const locality = \"London\";\n  const admin1 = \"England\";\n  const country = \"United Kingdom\";\n  const postal = String(randInt(10000, 99999));\n\n  // Set variables\n  rq.variables.set(\"ORG_NAME\", name);\n  rq.variables.set(\"ORG_VISIBLE_TO\", 1);\n\n  rq.environment.set(\"ORG_ADDR_VALUE\", `${streetNumber} ${street}, ${locality}`);\n  rq.environment.set(\"ORG_ADDR_COUNTRY\", country);\n  rq.environment.set(\"ORG_ADDR_ADMIN1\", admin1);\n  rq.environment.set(\"ORG_ADDR_LOCALITY\", locality);\n  rq.environment.set(\"ORG_ADDR_ROUTE\", street);\n  rq.environment.set(\"ORG_ADDR_STREET_NO\", streetNumber.toString());\n  rq.environment.set(\"ORG_ADDR_POSTAL\", postal);\n\n  console.log(\"Generated org variables:\", {\n    name,\n    streetNumber,\n    street,\n    locality,\n    admin1,\n    country,\n    postal\n  });\n})();\n",
+      "postResponse": "(function () {\n  const res = rq.response.json();\n\n  rq.test(\"Org created successfully\", () => {\n    rq.expect(res.success).to.eql(true);\n    rq.expect(res.data).to.have.property(\"id\");\n  });\n\n  rq.variables.set(\"ORG_ID\", res.data.id);\n\n  rq.test(\"Returned name matches input\", () => {\n    rq.expect(res.data.name).to.eql(rq.variables.get(\"ORG_NAME\"));\n  });\n\n  console.log(\"Created ORG_ID:\", res.data.id);\n})();\n"
+    },
+    "method": "POST",
+    "queryParams": [],
+    "headers": [
+      {
+        "key": "Content-Type",
+        "id": 0,
+        "value": "application/json",
+        "isEnabled": true
+      },
+      {
+        "key": "Accept",
+        "id": 1,
+        "value": "application/json",
+        "isEnabled": true
+      }
+    ],
+    "body": "{\n  \"name\": \"{{ORG_NAME}}\",\n  \"visible_to\": {{ORG_VISIBLE_TO}},\n  \"address\": {\n    \"value\": \"{{ORG_ADDR_VALUE}}\",\n    \"country\": \"{{ORG_ADDR_COUNTRY}}\",\n    \"admin_area_level_1\": \"{{ORG_ADDR_ADMIN1}}\",\n    \"locality\": \"{{ORG_ADDR_LOCALITY}}\",\n    \"route\": \"{{ORG_ADDR_ROUTE}}\",\n    \"street_number\": \"{{ORG_ADDR_STREET_NO}}\",\n    \"postal_code\": \"{{ORG_ADDR_POSTAL}}\"\n  }\n}\n",
+    "bodyContainer": {
+      "form": [],
+      "multipartForm": [],
+      "text": "{\n  \"name\": \"{{ORG_NAME}}\",\n  \"visible_to\": {{ORG_VISIBLE_TO}},\n  \"address\": {\n    \"value\": \"{{ORG_ADDR_VALUE}}\",\n    \"country\": \"{{ORG_ADDR_COUNTRY}}\",\n    \"admin_area_level_1\": \"{{ORG_ADDR_ADMIN1}}\",\n    \"locality\": \"{{ORG_ADDR_LOCALITY}}\",\n    \"route\": \"{{ORG_ADDR_ROUTE}}\",\n    \"street_number\": \"{{ORG_ADDR_STREET_NO}}\",\n    \"postal_code\": \"{{ORG_ADDR_POSTAL}}\"\n  }\n}\n"
+    },
+    "contentType": "application/json",
+    "auth": {
+      "currentAuthType": "INHERIT",
+      "authConfigStore": {
+        "API_KEY": {
+          "key": "x-api-token",
+          "addTo": "HEADER",
+          "value": "{{apiKey}}"
+        }
+      }
+    },
+    "pathVariables": []
+  }
+}

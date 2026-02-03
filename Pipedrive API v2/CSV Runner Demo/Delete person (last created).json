@@ -1,0 +1,29 @@
+{
+  "name": "Delete person (last created)",
+  "request": {
+    "type": "http",
+    "url": "{{baseUrl}}/persons/:id",
+    "scripts": {
+      "preRequest": "",
+      "postResponse": "(function () {\n  const res = rq.response.json();\n\n  rq.test(\"Person deleted\", () => {\n    rq.expect(res.success).to.eql(true);\n  });\n})();\n"
+    },
+    "method": "DELETE",
+    "queryParams": [],
+    "headers": [],
+    "body": "",
+    "contentType": "text/plain",
+    "auth": {
+      "currentAuthType": "INHERIT",
+      "authConfigStore": {}
+    },
+    "pathVariables": [
+      {
+        "id": 0,
+        "key": "id",
+        "value": "{{LAST_PERSON_ID}}",
+        "description": "",
+        "dataType": "string"
+      }
+    ]
+  }
+}

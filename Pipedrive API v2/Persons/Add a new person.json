@@ -1,0 +1,45 @@
+{
+  "name": "Add a new person",
+  "request": {
+    "type": "http",
+    "url": "{{baseUrl}}/persons",
+    "scripts": {
+      "preRequest": "(function () {\n  rq.test(\"ORG_ID exists for person creation\", () => {\n    rq.expect(rq.variables.get(\"ORG_ID\")).to.exist;\n  });\n\n  // Link person to created organization\n  rq.variables.set(\n    \"PERSON_ORG_ID\",\n    rq.variables.get(\"ORG_ID\")\n  );\n})();\n\n\n(function () {\n  function pick(a) {\n    return a[Math.floor(Math.random() * a.length)];\n  }\n  function digits(n) {\n    return Array.from({ length: n }, () => Math.floor(Math.random() * 10)).join(\"\");\n  }\n\n  const first = pick([\"Asha\", \"Rohit\", \"Neha\", \"Arjun\", \"Priya\", \"Karan\", \"Sana\", \"Vikram\"]);\n  const last = pick([\"Shah\", \"Mehta\", \"Singh\", \"Patel\", \"Gupta\", \"Nair\"]);\n  const name = `${first} ${last}`;\n\n  const base = name.toLowerCase().replace(/\\s+/g, \".\");\n  const email = `${base}${Math.floor(Math.random() * 100)}@example.com`;\n  const phone = `+91${digits(10)}`;\n\n  rq.environment.set(\"PERSON_NAME\", name);\n  rq.environment.set(\"PERSON_EMAIL\", email);\n  rq.environment.set(\"PERSON_PHONE\", phone);\n  rq.environment.set(\"PERSON_VISIBLE_TO\", 1);\n\n  console.log(\"Generated person:\", { name, email, phone });\n})();\n",
+      "postResponse": "const res = rq.response.json();\n\n(function () {\n\n  rq.test(\"Person created successfully\", () => {\n    rq.expect(res.success).to.eql(true);\n    rq.expect(res.data).to.have.property(\"id\");\n  });\n\n  rq.environment.set(\"PERSON_ID\", res.data.id);\n\n  rq.test(\"Returned name matches input\", () => {\n    rq.expect(res.data.name).to.eql(rq.environment.get(\"PERSON_NAME\"));\n  });\n\n  console.log(\"Created PERSON_ID:\", res.data.id);\n})();\n\nrq.test(\"Person linked to organization\", () => {\n  rq.expect(res.data.org_id).to.eql(\n    Number(rq.variables.get(\"ORG_ID\"))\n  );\n});\n"
+    },
+    "method": "POST",
+    "queryParams": [],
+    "headers": [
+      {
+        "value": "application/json",
+        "isEnabled": true,
+        "id": 0,
+        "key": "Content-Type"
+      },
+      {
+        "value": "application/json",
+        "isEnabled": true,
+        "key": "Accept",
+        "id": 1
+      }
+    ],
+    "body": "{\n  \"name\": \"{{PERSON_NAME}}\",\n   \"org_id\": {{PERSON_ORG_ID}},\n  \"emails\": [\n    {\n      \"value\": \"{{PERSON_EMAIL}}\",\n      \"primary\": true,\n      \"label\": \"work\"\n    }\n  ],\n  \"phones\": [\n    {\n      \"value\": \"{{PERSON_PHONE}}\",\n      \"primary\": true,\n      \"label\": \"mobile\"\n    }\n  ],\n  \"visible_to\": {{PERSON_VISIBLE_TO}}\n}\n",
+    "bodyContainer": {
+      "form": [],
+      "text": "{\n  \"name\": \"{{PERSON_NAME}}\",\n  \"org_id\": {{PERSON_ORG_ID}},\n  \"emails\": [\n    { \n      \"value\": \"{{PERSON_EMAIL_1}}\", \n      \"primary\": true, \n      \"label\": \"work\" \n    },\n    { \n      \"value\": \"{{PERSON_EMAIL_2}}\", \n      \"primary\": false, \n      \"label\": \"personal\" \n    }\n  ],\n  \"phones\": [\n    { \n      \"value\": \"{{PERSON_PHONE_1}}\", \n      \"primary\": true, \n      \"label\": \"mobile\" \n    },\n    { \n      \"value\": \"{{PERSON_PHONE_2}}\", \n      \"primary\": false, \n      \"label\": \"office\" \n    }\n  ],\n  \"visible_to\": {{PERSON_VISIBLE_TO}}\n}\n",
+      "multipartForm": []
+    },
+    "contentType": "application/json",
+    "auth": {
+      "currentAuthType": "INHERIT",
+      "authConfigStore": {
+        "API_KEY": {
+          "key": "x-api-token",
+          "addTo": "HEADER",
+          "value": "{{apiKey}}"
+        }
+      }
+    },
+    "pathVariables": []
+  }
+}

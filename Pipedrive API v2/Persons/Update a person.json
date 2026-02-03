@@ -1,0 +1,51 @@
+{
+  "name": "Update a person",
+  "request": {
+    "type": "http",
+    "url": "{{baseUrl}}/persons/:id",
+    "scripts": {
+      "preRequest": "(function () {\n  const updatedName = rq.environment.get(\"PERSON_NAME\") + \" Updated\";\n  rq.environment.set(\"PERSON_UPDATED_NAME\", updatedName);\n})();\n",
+      "postResponse": "(function () {\n  const res = rq.response.json();\n\n  rq.test(\"Person updated successfully\", () => {\n    rq.expect(res.success).to.eql(true);\n  });\n\n  rq.test(\"Name updated\", () => {\n    rq.expect(res.data.name).to.eql(\n      rq.environment.get(\"PERSON_UPDATED_NAME\")\n    );\n  });\n})();\n"
+    },
+    "method": "PATCH",
+    "queryParams": [],
+    "headers": [
+      {
+        "isEnabled": true,
+        "value": "application/json",
+        "key": "Content-Type",
+        "id": 0
+      },
+      {
+        "value": "application/json",
+        "key": "Accept",
+        "id": 1,
+        "isEnabled": true
+      }
+    ],
+    "body": "{\n  \"name\": \"{{PERSON_UPDATED_NAME}}\"\n}\n",
+    "bodyContainer": {
+      "text": "{\n  \"name\": \"<string>\",\n  \"owner_id\": \"<integer>\",\n  \"org_id\": \"<integer>\",\n  \"add_time\": \"<string>\",\n  \"update_time\": \"<string>\",\n  \"emails\": [\n    {\n      \"value\": \"<string>\",\n      \"primary\": \"<boolean>\",\n      \"label\": \"<boolean>\"\n    },\n    {\n      \"value\": \"<string>\",\n      \"primary\": \"<boolean>\",\n      \"label\": \"<boolean>\"\n    }\n  ],\n  \"phones\": [\n    {\n      \"value\": \"<string>\",\n      \"primary\": \"<boolean>\",\n      \"label\": \"<boolean>\"\n    },\n    {\n      \"value\": \"<string>\",\n      \"primary\": \"<boolean>\",\n      \"label\": \"<boolean>\"\n    }\n  ],\n  \"visible_to\": \"<integer>\",\n  \"label_ids\": [\n    \"<integer>\",\n    \"<integer>\"\n  ],\n  \"marketing_status\": \"<string>\"\n}"
+    },
+    "contentType": "application/json",
+    "auth": {
+      "currentAuthType": "API_KEY",
+      "authConfigStore": {
+        "API_KEY": {
+          "addTo": "HEADER",
+          "key": "x-api-token",
+          "value": "{{apiKey}}"
+        }
+      }
+    },
+    "pathVariables": [
+      {
+        "id": 0,
+        "key": "id",
+        "value": "{{PERSON_ID}}",
+        "description": "",
+        "dataType": "string"
+      }
+    ]
+  }
+}
