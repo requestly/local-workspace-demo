@@ -1,0 +1,25 @@
+{
+  "name": "Basic Authentication",
+  "request": {
+    "type": "http",
+    "url": "https://httpbin.org/basic-auth/demo_user/demo_pass",
+    "scripts": {
+      "preRequest": "",
+      "postResponse": "(function () {\n  const res = rq.response.json();\n\n  rq.test(\"Basic auth successful\", () => {\n    rq.expect(res.authenticated).to.eql(true);\n    rq.expect(res.user).to.eql(\"demo_user\");\n  });\n})();\n"
+    },
+    "method": "GET",
+    "queryParams": [],
+    "headers": [],
+    "contentType": "text/plain",
+    "auth": {
+      "authConfigStore": {
+        "BASIC_AUTH": {
+          "password": "demo_pass",
+          "username": "demo_user"
+        }
+      },
+      "currentAuthType": "BASIC_AUTH"
+    },
+    "pathVariables": []
+  }
+}

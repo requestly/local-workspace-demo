@@ -1,0 +1,24 @@
+{
+  "name": "Protected Request – Use Token",
+  "request": {
+    "type": "http",
+    "url": "https://dummyjson.com/auth/profile",
+    "scripts": {
+      "postResponse": "",
+      "preRequest": "(function () {\n  const token = rq.environment.get(\"ACCESS_TOKEN\");\n\n  rq.test(\"Access token exists\", () => {\n    rq.expect(token).to.exist;\n  });\n\n  console.log(\"Using access token for auth\");\n})();\n"
+    },
+    "method": "GET",
+    "queryParams": [],
+    "headers": [],
+    "contentType": "text/plain",
+    "auth": {
+      "authConfigStore": {
+        "BEARER_TOKEN": {
+          "bearer": "{{ACCESS_TOKEN}}"
+        }
+      },
+      "currentAuthType": "BEARER_TOKEN"
+    },
+    "pathVariables": []
+  }
+}

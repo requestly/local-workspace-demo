@@ -1,0 +1,24 @@
+{
+  "name": "Bearer Token",
+  "request": {
+    "type": "http",
+    "url": "https://httpbin.org/bearer",
+    "scripts": {
+      "preRequest": "",
+      "postResponse": "(function () {\n  const res = rq.response.json();\n\n  rq.test(\"Bearer token accepted\", () => {\n    rq.expect(res.authenticated).to.eql(true);\n    rq.expect(res.token).to.eql(\"demo_bearer_token_456\");\n  });\n})();\n"
+    },
+    "method": "GET",
+    "queryParams": [],
+    "headers": [],
+    "contentType": "text/plain",
+    "auth": {
+      "authConfigStore": {
+        "BEARER_TOKEN": {
+          "bearer": "demo_bearer_token_456"
+        }
+      },
+      "currentAuthType": "BEARER_TOKEN"
+    },
+    "pathVariables": []
+  }
+}

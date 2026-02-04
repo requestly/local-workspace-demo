@@ -1,0 +1,26 @@
+{
+  "name": "API Key",
+  "request": {
+    "type": "http",
+    "url": "https://httpbin.org/headers",
+    "scripts": {
+      "preRequest": "",
+      "postResponse": "(function () {\n  const res = rq.response.json();\n\n  rq.test(\"API key sent in headers\", () => {\n    rq.expect(res.headers[\"X-Api-Key\"]).to.eql(\"demo_api_key_123\");\n  });\n})();\n"
+    },
+    "method": "GET",
+    "queryParams": [],
+    "headers": [],
+    "contentType": "text/plain",
+    "auth": {
+      "authConfigStore": {
+        "API_KEY": {
+          "addTo": "HEADER",
+          "value": "demo_api_key_123",
+          "key": "x-api-key"
+        }
+      },
+      "currentAuthType": "API_KEY"
+    },
+    "pathVariables": []
+  }
+}

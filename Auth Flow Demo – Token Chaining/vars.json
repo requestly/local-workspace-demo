@@ -1,0 +1,8 @@
+{
+  "baseUrl": {
+    "value": "https://reqres.in/api",
+    "type": "string",
+    "id": 0,
+    "isSecret": false
+  }
+}

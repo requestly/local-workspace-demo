@@ -1,0 +1,38 @@
+{
+  "name": "Login – Get Token",
+  "request": {
+    "type": "http",
+    "url": "https://dummyjson.com/auth/login",
+    "scripts": {
+      "postResponse": "(function () {\n  const res = rq.response.json();\n\n  rq.test(\"Login successful\", () => {\n    rq.expect(res.accessToken).to.exist;\n    rq.expect(res.refreshToken).to.exist;\n  });\n\n  // Store tokens for later requests\n  rq.environment.set(\"ACCESS_TOKEN\", res.accessToken);\n  rq.environment.set(\"REFRESH_TOKEN\", res.refreshToken);\n\n  rq.environment.set(\"AUTH_USER\", res.username);\n\n  console.log(\"Access token received:\", res.accessToken);\n})();\n",
+      "preRequest": ""
+    },
+    "method": "POST",
+    "queryParams": [],
+    "headers": [
+      {
+        "key": "Content-Type",
+        "isEnabled": true,
+        "id": 1770163597890,
+        "dataType": "string",
+        "value": "application/json",
+        "description": ""
+      },
+      {
+        "dataType": "string",
+        "description": "",
+        "value": "application/json",
+        "isEnabled": true,
+        "id": 1770163607127,
+        "key": "Accept"
+      }
+    ],
+    "body": "{\n  \"username\": \"emilys\",\n  \"password\": \"emilyspass\"\n}\n",
+    "contentType": "application/json",
+    "auth": {
+      "currentAuthType": "INHERIT",
+      "authConfigStore": {}
+    },
+    "pathVariables": []
+  }
+}
