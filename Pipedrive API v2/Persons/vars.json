@@ -1,8 +1,0 @@
-{
-  "baseUrl": {
-    "value": "https://api.pipedrive.com/api/v2",
-    "type": "string",
-    "id": 0,
-    "isSecret": false
-  }
-}
